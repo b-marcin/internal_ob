@@ -79,6 +79,7 @@ def backtest_strategy(df, initial_capital=10000):
                 'exit_price': exit_price,
                 'pnl': (exit_price - trades[-1]['entry_price']) * trades[-1]['size']
             })
+            trades[-1]['return_pct'] = ((exit_price - trades[-1]['entry_price']) / trades[-1]['entry_price']) * 100
             capital += trades[-1]['pnl']
         
         # Update equity curve
@@ -191,7 +192,9 @@ def main():
             # Display trades table
             if len(trades_df) > 0:
                 st.subheader("Trade History")
-                st.dataframe(trades_df)
+                trades_display = trades_df.copy()
+                trades_display['return_pct'] = trades_display['return_pct'].round(2).astype(str) + '%'
+                st.dataframe(trades_display)
 
 if __name__ == "__main__":
     main()
